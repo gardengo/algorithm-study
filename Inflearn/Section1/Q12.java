@@ -2,7 +2,7 @@ package Section1;
 
 import java.util.Scanner;
 
-public class Q12 { //문자열 압축
+public class Q12 { //암호
     public String solution(int num, String str) {
         String answer = "";
         for (int i = 0; i < num; i++) {
