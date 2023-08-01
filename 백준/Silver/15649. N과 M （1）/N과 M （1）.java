@@ -1,16 +1,12 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private static StringBuffer sb = new StringBuffer();
 	private static int N;
 	private static int M;
-	private static int[] data;
-	private static int[] numbers;
+	private static char[] answer;
 	private static boolean[] isSelected;
 
 	public static void main(String[] args) throws Exception {
@@ -18,29 +14,27 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		data = new int[N];
-		numbers = new int[M];
+		answer = new char[M * 2];
 		isSelected = new boolean[N];
 
-		for (int i = 0; i < N; i++)
-			data[i] = i + 1;
+		for (int i = 0; i < M; i++)
+			answer[i * 2 + 1] = ' ';
+		answer[M * 2 - 1] = '\n';
 
 		recursion(0);
-		bw.flush();
+		System.out.println(sb);
 	}
 
 	private static void recursion(int num) throws Exception {
 		if (num == M) {
-			for (int i = 0; i < numbers.length; i++)
-				bw.append(numbers[i] + " ");
-			bw.append("\n");
+			sb.append(answer);
 			return;
 		}
 
 		for (int i = 0; i < N; i++) {
 			if (isSelected[i])
 				continue;
-			numbers[num] = data[i];
+			answer[num * 2] = (char) ('0' + i + 1);
 			isSelected[i] = true;
 			recursion(num + 1);
 			isSelected[i] = false;
