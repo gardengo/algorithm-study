@@ -14,11 +14,11 @@ public class Solution {
 			int n = Integer.parseInt(br.readLine());
 			x = -1;
 			for (int i = 0; i < 100; i++) {
-//				String[] str = br.readLine().split(" ");
-				StringTokenizer st = new StringTokenizer(br.readLine());
+				String[] str = br.readLine().split(" ");
+//				StringTokenizer st = new StringTokenizer(br.readLine());
 				for (int j = 0; j < 100; j++) {
-//					board[i][j] = Integer.parseInt(str[j]);
-					board[i][j] = Integer.parseInt(st.nextToken());
+					board[i][j] = Integer.parseInt(str[j]);
+//					board[i][j] = Integer.parseInt(st.nextToken());
 					if (i == 99 && board[i][j] == 2) {
 						x = j;
 						break;
