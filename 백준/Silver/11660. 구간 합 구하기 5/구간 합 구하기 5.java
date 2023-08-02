@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-// 메모리 140528KB, 시간 808ms
+// 메모리 141576KB, 시간 768ms
 public class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,8 +32,8 @@ public class Main {
 			int y2 = Integer.parseInt(st.nextToken());
 
 			// x2,y2까지의 합 - x축 - y축 + 겹치는 부분
-			int answer = NBoard[x2][y2] - NBoard[x2][y1 - 1] - NBoard[x1 - 1][y2] + NBoard[x1 - 1][y1 - 1];
-			sb.append(answer + "\n");
+			sb.append(NBoard[x2][y2] - NBoard[x2][y1 - 1] - NBoard[x1 - 1][y2] + NBoard[x1 - 1][y1 - 1]);
+			sb.append(" \n");
 		}
 
 		bw.append(sb);
