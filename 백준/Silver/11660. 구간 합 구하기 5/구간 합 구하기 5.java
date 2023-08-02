@@ -1,36 +1,26 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+// 메모리 140528KB, 시간 808ms
 public class Main {
-	private static int[][] NBoard;
-	private static int N;
-
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringBuilder sb = new StringBuilder();
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken()); // 수의 개수 N
+		int N = Integer.parseInt(st.nextToken()); // 수의 개수 N
 		int M = Integer.parseInt(st.nextToken()); // 합을 구해야 하는 횟수 M
 
-		NBoard = new int[N + 1][N + 1]; // x,y가 0일때 합도 0을 저장
+		int[][] NBoard = new int[N + 1][N + 1]; // x,y가 0일때 0을 저장
 		for (int i = 1; i <= N; i++) {
 			st = new StringTokenizer(br.readLine());
-			for (int j = 1; j <= N; j++) {
-				NBoard[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
-
-		for (int i = 1; i <= N; i++) { // y축으로 더하기
-			for (int j = 1; j <= N; j++) {
-				NBoard[i][j] += NBoard[i - 1][j];
-			}
-		}
-
-		for (int i = 1; i <= N; i++) { // x축으로 더하기
-			for (int j = 1; j <= N; j++) {
-				NBoard[i][j] += NBoard[i][j - 1];
+			for (int j = 1; j <= N; j++) { // x,y까지의 합을 바로 저장
+				NBoard[i][j] = NBoard[i - 1][j] + NBoard[i][j - 1] - NBoard[i - 1][j - 1]
+						+ Integer.parseInt(st.nextToken());
 			}
 		}
 
@@ -46,7 +36,8 @@ public class Main {
 			sb.append(answer + "\n");
 		}
 
-		System.out.println(sb);
+		bw.append(sb);
+		bw.flush();
 	}
 
 }
