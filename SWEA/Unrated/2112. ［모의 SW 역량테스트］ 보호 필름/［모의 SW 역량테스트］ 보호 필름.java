@@ -31,7 +31,7 @@ public class Solution {
 				}
 			}
 
-			answer = Integer.MAX_VALUE;
+			answer = 13;
 			if (K == 1) { // K가 1이면 무조건 0, 연산을 줄이기 위해 따로 뺌
 				answer = 0;
 			} else {
@@ -49,7 +49,7 @@ public class Solution {
 
 	private static void medicine(int idx, int count) {
 		if (check()) { // 조건을 만족하면 최소값 갱신
-			answer = Math.min(answer, count);
+			answer = count;
 			return;
 		}
 		if (count >= answer) // 지금까지의 결과보다 크거나 같으면 바로 정지
@@ -57,15 +57,13 @@ public class Solution {
 		if (idx == D) { // 마지막 행까지 가면 리턴
 			return;
 		} else {
-			int[] copy = new int[W];
-			for (int i = 0; i < W; i++)
-				copy[i] = film[idx][i];
-
+			int[] copy = film[idx].clone();
 			// idx행을 그대로 두고 다음 행 탐색
 			medicine(idx + 1, count);
 
 			// idx행을 A로 바꾸고 다음 행 탐색
-			film[idx] = new int[W];
+			for (int i = 0; i < W; i++)
+				film[idx][i] = 0;
 			medicine(idx + 1, count + 1);
 
 			// idx행을 B로 바꾸고 다음 행 탐색
@@ -73,9 +71,7 @@ public class Solution {
 				film[idx][i] = 1;
 			medicine(idx + 1, count + 1);
 
-			// 수정한 film 행 원래대로
-			for (int i = 0; i < W; i++)
-				film[idx][i] = copy[i];
+			film[idx] = copy.clone(); // 수정한 film 행 원래대로
 		}
 	}
 
