@@ -3,6 +3,11 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+/*
+ * 메모리 107,904kb, 실행시간 800ms
+ * 완전탐색으로 한 행씩 바꿔가며 탐색
+ * 최소값을 넘어가면 그 이후는 탐색하지 않는 방식으로 연산을 줄임
+ */
 public class Solution {
 	private static int D, W, K, answer;
 	private static int[][] film;
@@ -47,12 +52,15 @@ public class Solution {
 			answer = Math.min(answer, count);
 			return;
 		}
-		if (count > answer) // 지금까지의 결과보다 크면 바로 정지
+		if (count >= answer) // 지금까지의 결과보다 크거나 같으면 바로 정지
 			return;
 		if (idx == D) { // 마지막 행까지 가면 리턴
 			return;
 		} else {
-			int[] copy = film[idx].clone();
+			int[] copy = new int[W];
+			for (int i = 0; i < W; i++)
+				copy[i] = film[idx][i];
+
 			// idx행을 그대로 두고 다음 행 탐색
 			medicine(idx + 1, count);
 
@@ -66,7 +74,9 @@ public class Solution {
 				film[idx][i] = 1;
 			medicine(idx + 1, count + 1);
 
-			film[idx] = copy.clone(); // 수정한 film 행 원래대로
+			// 수정한 film 행 원래대로
+			for (int i = 0; i < W; i++)
+				film[idx][i] = copy[i];
 		}
 	}
 
