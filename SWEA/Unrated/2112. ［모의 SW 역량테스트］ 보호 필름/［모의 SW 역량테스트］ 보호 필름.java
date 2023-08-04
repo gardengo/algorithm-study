@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /*
- * 메모리 107,904kb, 실행시간 800ms
+ * 메모리 89,760kb, 실행시간 606ms
  * 완전탐색으로 한 행씩 바꿔가며 탐색
  * 최소값을 넘어가면 그 이후는 탐색하지 않는 방식으로 연산을 줄임
  */
@@ -65,8 +65,7 @@ public class Solution {
 			medicine(idx + 1, count);
 
 			// idx행을 A로 바꾸고 다음 행 탐색
-			for (int i = 0; i < W; i++)
-				film[idx][i] = 0;
+			film[idx] = new int[W];
 			medicine(idx + 1, count + 1);
 
 			// idx행을 B로 바꾸고 다음 행 탐색
