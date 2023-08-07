@@ -1,8 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Main {
 
@@ -10,15 +7,17 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		int N = Integer.parseInt(br.readLine());
-		List<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < N; i++)
-			list.add(Integer.parseInt(br.readLine()));
 
-		Collections.sort(list);
-		for (int i = 0; i < N; i++) {
-			sb.append(list.get(i));
-			sb.append("\n");
-		}
+		boolean[] arr = new boolean[2000001];
+		for (int i = 0; i < N; i++)
+			arr[Integer.parseInt(br.readLine()) + 1000000] = true;
+
+		for (int i = 0; i < 2000001; i++)
+			if (arr[i] == true) {
+				sb.append(i - 1000000);
+				sb.append("\n");
+			}
+
 		System.out.println(sb);
 	}
 
