@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+// 메모리 20,956kb 실행시간 3,551ms
 public class Solution {
 	private static int total = 362880; // 전체 게임의 수
 	private static boolean[] card, visited;
@@ -33,34 +34,37 @@ public class Solution {
 	}
 
 	private static void game(int idx, int[] output, int depth, int n, int r) {
-		if (depth == r) {
-			gyuPoint = 0;
-			inPoint = 0;
-			while (idx < 9) {
-				if (gyuCard[idx] > output[idx]) {
-					gyuPoint += gyuCard[idx] + output[idx];
-				} else {
-					inPoint += gyuCard[idx] + output[idx];
+		// idx:승부를 위한 인덱스, output:조합한 인영이의 카드 배열, depth:조합에 사용되는 변수, n:인영이의 카드 수, r:조합에
+		// 사용할 카드 수
+		if (depth == r) { // r개의 카드를 다 조합하면 게임 시작
+			gyuPoint = 0; // 규영이의 포인트
+			inPoint = 0; // 인영이의 포인트
+			while (idx < 9) { // 0부터 9까지 탐색
+				if (gyuCard[idx] > output[idx]) { // 규영이의 카드가 더 크면
+					gyuPoint += gyuCard[idx] + output[idx]; // 규영이의 포인트 +
+				} else { // 인영이의 카드가 더 크면
+					inPoint += gyuCard[idx] + output[idx]; // 인영이의 포인트 +
 				}
-				if (gyuPoint >= 86) {
-					gyuWin++;
-					return;
+				int remain = 171 - Math.abs(gyuPoint - inPoint);
+				if (gyuPoint - inPoint >= remain) { // 규영이의 포인트와 인영이의 포인트 차이가 남은 점수를 넘으면
+					gyuWin++; // 규영이가 이긴다
+					return; // 이후 탐색 x
 				}
-				if (inPoint >= 86)
-					return;
-				idx++;
+				if (inPoint - gyuPoint >= remain) // 인영이의 포인트와 규영이의 포인트 차이가 남은 점수를 넘으면
+					return; // 인영이가 이기므로 이후 탐색 x
+				idx++; // 다음 인덱스 탐색을 위해 +
 			}
-			if (gyuPoint > inPoint)
-				gyuWin++;
-			return;
+			if (gyuPoint > inPoint) // 게임 종료 후 규영이의 점수가 더 높으면
+				gyuWin++; // 규영이가 이긴다
+			return; // 게임 종료
 		}
 
-		for (int i = 0; i < n; i++) {
-			if (visited[i] != true) {
-				visited[i] = true;
-				output[depth] = inCard[i];
-				game(idx, output, depth + 1, n, r);
-				visited[i] = false;
+		for (int i = 0; i < n; i++) { // 인영이의 카드 수 만큼 반복
+			if (visited[i] != true) { // 사용하지 않은 카드면
+				visited[i] = true; // 사용하고
+				output[depth] = inCard[i]; // 결과 배열에 추가한다
+				game(idx, output, depth + 1, n, r); // depth를 1 늘려서 다음 범위 탐색
+				visited[i] = false; // 재귀가 풀리면 다시 false로
 			}
 		}
 	}
