@@ -45,12 +45,11 @@ public class Solution {
 				} else { // 인영이의 카드가 더 크면
 					inPoint += gyuCard[idx] + output[idx]; // 인영이의 포인트 +
 				}
-				int remain = 171 - Math.abs(gyuPoint - inPoint);
-				if (gyuPoint - inPoint >= remain) { // 규영이의 포인트와 인영이의 포인트 차이가 남은 점수를 넘으면
+				if (gyuPoint >= 86) { // 규영이의 포인트와 인영이의 포인트 차이가 남은 점수를 넘으면
 					gyuWin++; // 규영이가 이긴다
 					return; // 이후 탐색 x
 				}
-				if (inPoint - gyuPoint >= remain) // 인영이의 포인트와 규영이의 포인트 차이가 남은 점수를 넘으면
+				if (inPoint >= 86) // 인영이의 포인트와 규영이의 포인트 차이가 남은 점수를 넘으면
 					return; // 인영이가 이기므로 이후 탐색 x
 				idx++; // 다음 인덱스 탐색을 위해 +
 			}
