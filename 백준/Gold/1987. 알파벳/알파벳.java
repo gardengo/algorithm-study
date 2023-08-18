@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main { // 클래스 시작
@@ -9,8 +7,7 @@ public class Main { // 클래스 시작
 	static char[][] board;
 	static int[] dx = { -1, 1, 0, 0 }; // 상하좌우
 	static int[] dy = { 0, 0, -1, 1 };
-	static Set<Character> set;
-	static boolean[][] visited;
+	static boolean[] flag;
 
 	public static void main(String[] args) throws Exception { // 메인 시작
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // 입력을 받기 위한 BufferedReader 객체 생성
@@ -24,24 +21,20 @@ public class Main { // 클래스 시작
 				board[i][j] = str.charAt(j - 1); // 보드에 알파벳 입력
 		} // 입력 종료
 
-		set = new HashSet<Character>(); // 사용한 알파벳을 저장하는 set
-		visited = new boolean[R + 2][C + 2]; // 방문한 지점을 표시
+		flag = new boolean[26]; // 사용한 알파벳을 저장하는 set
 		dfs(1, 1, 1);
 		System.out.println(answer);
 	} // 메인 종료
 
 	static void dfs(int x, int y, int sum) {
-//		visited[x][y] = true; // 현재 위치를 표시한다
-		set.add(board[x][y]); // 현재 문자를 set에 넣는다
+		flag[board[x][y] - 'A'] = true; // 현재 문자를 flag에 넣는다
 		answer = sum > answer ? sum : answer; // 정답보다 합이 크면 최신화
 
 		for (int i = 0; i < 4; i++) { // 4방향 탐색
-			if ('A' <= board[x + dx[i]][y + dy[i]] && board[x + dx[i]][y + dy[i]] <= 'Z'
-					) { // 이동 가능하고 방문한 적이 없으면 들어간다
-				if (!set.contains(board[x + dx[i]][y + dy[i]])) { // 사용한 적 없는 알파벳이면
+			if ('A' <= board[x + dx[i]][y + dy[i]] && board[x + dx[i]][y + dy[i]] <= 'Z') { // 이동 가능하고 방문한 적이 없으면 들어간다
+				if (!flag[board[x + dx[i]][y + dy[i]] - 'A']) { // 사용한 적 없는 알파벳이면
 					dfs(x + dx[i], y + dy[i], sum + 1); // 계속 탐색
-					set.remove(board[x + dx[i]][y + dy[i]]); // dfs가 풀리면 set에서 제거하고
-//					visited[x + dx[i]][y + dy[i]] = false; // visited도 false로
+					flag[board[x + dx[i]][y + dy[i]] - 'A'] = false; // dfs가 풀리면 flag에서 제거하고
 				}
 			}
 		}
