@@ -31,17 +31,17 @@ public class Main { // 클래스 시작
 	} // 메인 종료
 
 	static void dfs(int x, int y, int sum) {
-		visited[x][y] = true; // 현재 위치를 표시한다
+//		visited[x][y] = true; // 현재 위치를 표시한다
 		set.add(board[x][y]); // 현재 문자를 set에 넣는다
-		answer = sum > answer ? sum : answer;
-		
-		for (int i = 0; i < 4; i++) {
+		answer = sum > answer ? sum : answer; // 정답보다 합이 크면 최신화
+
+		for (int i = 0; i < 4; i++) { // 4방향 탐색
 			if ('A' <= board[x + dx[i]][y + dy[i]] && board[x + dx[i]][y + dy[i]] <= 'Z'
-					&& !visited[x + dx[i]][y + dy[i]]) {
-				if (!set.contains(board[x + dx[i]][y + dy[i]])) {
-					dfs(x + dx[i], y + dy[i], sum + 1);
-					set.remove(board[x + dx[i]][y + dy[i]]);
-					visited[x + dx[i]][y + dy[i]] = false;
+					) { // 이동 가능하고 방문한 적이 없으면 들어간다
+				if (!set.contains(board[x + dx[i]][y + dy[i]])) { // 사용한 적 없는 알파벳이면
+					dfs(x + dx[i], y + dy[i], sum + 1); // 계속 탐색
+					set.remove(board[x + dx[i]][y + dy[i]]); // dfs가 풀리면 set에서 제거하고
+//					visited[x + dx[i]][y + dy[i]] = false; // visited도 false로
 				}
 			}
 		}
