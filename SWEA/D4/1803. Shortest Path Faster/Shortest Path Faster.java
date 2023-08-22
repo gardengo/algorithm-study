@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+// 메모리 123,844kb 실행시간 658ms
 public class Solution {
 
 	static class Node {
@@ -46,14 +47,14 @@ public class Solution {
 			for (int i = 0; i < N + 1; i++)
 				dist[i] = Long.MAX_VALUE;
 
-			PriorityQueue<Node> que = new PriorityQueue<Node>((a, b) -> Long.compare(a.cost, b.cost));
-			que.offer(new Node(start, 0));
+			PriorityQueue<Node> pq = new PriorityQueue<Node>((a, b) -> Long.compare(a.cost, b.cost));
+			pq.offer(new Node(start, 0));
 			dist[start] = 0;
-			while (!que.isEmpty()) {
-				Node cur = que.poll();
+			while (!pq.isEmpty()) {
+				Node cur = pq.poll();
 
 				if (cur.idx == finish) {
-					answer = cur.cost;
+					answer = dist[cur.idx];
 					break;
 				}
 
@@ -64,7 +65,7 @@ public class Solution {
 					Node next = graph.get(cur.idx).get(i);
 					if (dist[next.idx] > cur.cost + next.cost) {
 						dist[next.idx] = cur.cost + next.cost;
-						que.offer(new Node(next.idx, dist[next.idx]));
+						pq.offer(new Node(next.idx, dist[next.idx]));
 					}
 				}
 			}
