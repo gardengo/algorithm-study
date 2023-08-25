@@ -4,91 +4,90 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class Solution {
-	static int N, connect, length; // 연결된 core의 수, 전선의 길이
-	static int[][] maxinos; // 멕시노스 정보를 갖는 2차원 배열
-	static List<int[]> list; // core의 좌표를 갖는 리스트
+public class Solution { // 클래스 시작
+	static int N, answer, maxCon;
+	static int[][] map;
+	static List<int[]> core;
 	static int[] dx = { -1, 1, 0, 0 }; // 상하좌우
-	static int[] dy = { 0, 0, -1, 1 }; // 상하좌우
+	static int[] dy = { 0, 0, -1, 1 };
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		int T = Integer.parseInt(br.readLine().trim());
+	public static void main(String[] args) throws Exception { // 메인 시작
+		BufferedReader br = new BufferedReader((new InputStreamReader(System.in))); // 입력을 받기 위한 BufferedReader 객체 생성
+		StringBuilder sb = new StringBuilder(); // 출력을 위한 StringBuilder 객체 생성
+		int T = Integer.parseInt(br.readLine().trim()); // 테스트 케이스의 수 T
 
-		// 테스트 케이스 시작
-		for (int test_case = 1; test_case <= T; test_case++) {
-			N = Integer.parseInt(br.readLine().trim());
-			maxinos = new int[N][N];
-			list = new ArrayList<int[]>();
-
-			// 멕시노스 입력 시작
-			for (int i = 0; i < N; i++) {
-				StringTokenizer st = new StringTokenizer(br.readLine());
-				for (int j = 0; j < N; j++) {
-					maxinos[i][j] = Integer.parseInt(st.nextToken());
-					if (maxinos[i][j] == 1) { // core의 위치
-						if (0 < i && i < N - 1 && 0 < j && j < N - 1) // 가장자리가 아니면 큐에 추가
-							list.add(new int[] { i, j });
+		for (int test_case = 1; test_case <= T; test_case++) { // 테스트 케이스 시작
+			StringTokenizer st = new StringTokenizer(br.readLine().trim()); // 한 줄을 받아 공백으로 나눈다
+			N = Integer.parseInt(st.nextToken()); // 배열의 크기 N
+			map = new int[N][N]; // N*N 크기의 맵 생성
+			core = new ArrayList<int[]>(); // 코어의 좌표를 갖는 리스트
+			for (int i = 0; i < N; i++) { // N줄의 입력
+				st = new StringTokenizer(br.readLine().trim()); // 한 줄을 공백으로 나누자
+				for (int j = 0; j < N; j++) { // N개의 입력
+					map[i][j] = Integer.parseInt(st.nextToken()); // map에 값을 넣는다
+					if (i > 0 && i < N - 1 && j > 0 && j < N - 1) { // 가장자리가 아닌 경우
+						if (map[i][j] == 1) // 코어인 경우
+							core.add(new int[] { i, j }); // 리스트에 추가한다
 					}
 				}
-			}
+			} // 입력 종료
 
-			connect = 1;
-			length = 144;
-			findLength(0, 0, 0);
-			sb.append("#").append(test_case).append(" ").append(length).append("\n");
-		}
+			maxCon = 0;
+			dfs(0, 0, 0);
+			sb.append("#").append(test_case).append(" ").append(answer).append("\n");
+		} // 테스트 케이스 종료
 		System.out.println(sb);
-	}
+	} // 메인 종료
 
-	static void findLength(int index, int con, int len) {
-		if (con > connect) {
-			connect = con;
-			length = len;
-		} else if (con == connect && len < length) {
-			length = len;
+	static void dfs(int n, int len, int con) {
+		if (maxCon < con) {
+			maxCon = con;
+			answer = len;
+		} else if (maxCon == con) {
+			answer = len < answer ? len : answer;
 		}
-
-		if (index == list.size()) // 리스트 끝까지 가면 리턴한다
+		if (n == core.size())
 			return;
 
-		int[] core = list.get(index);
-		for (int d = 0; d < 4; d++) {
+		int[] cur = core.get(n);
+		int curX = cur[0];
+		int curY = cur[1];
+
+		for (int d = 0; d < 4; d++) { // 4방향에 대하여
 			boolean connected = true;
-			int x = core[0];
-			int y = core[1];
-			while (0 < x && x < N - 1 && 0 < y && y < N - 1) {
-				if (maxinos[x + dx[d]][y + dy[d]] != 0) {
+			while (curX + dx[d] >= 0 && curX + dx[d] < N && curY + dy[d] >= 0 && curY + dy[d] < N) {
+				int nextX = curX + dx[d];
+				int nextY = curY + dy[d];
+				if (map[nextX][nextY] == 0) { // 다음 위치가 비어있다면
+					map[nextX][nextY] = 2;
+					len++;
+					curX = nextX;
+					curY = nextY;
+				} else { // 다음 위치에 core나 전선이 있는 경우
 					connected = false;
-					while (x != core[0] || y != core[1]) {
-						maxinos[x][y] = 0;
-						x -= dx[d];
-						y -= dy[d];
-						len--;
-					}
 					break;
 				}
-				x += dx[d];
-				y += dy[d];
-				len++;
-				maxinos[x][y] = 2;
 			}
-			if (connected) { // 연결이 되었다면
-				if (list.size() - index - 1 >= connect - con - 1) // 남은 코어가 연결의 차이보다 작을 때만
-					findLength(index + 1, con + 1, len); // 다음 core 탐색
-				while (x != core[0] || y != core[1]) { // 탐색이 끝나면 맥시노스 원래대로
-					maxinos[x][y] = 0;
-					x -= dx[d];
-					y -= dy[d];
+
+			if (!connected) {
+				while (curX != cur[0] || curY != cur[1]) {
+					map[curX][curY] = 0;
 					len--;
+					curX -= dx[d];
+					curY -= dy[d];
 				}
-			} else { // 연결이 안돼도 탐색
-				if (list.size() - index - 1 >= connect - con) // 남은 코어가 연결의 차이보다 작을 때만
-					findLength(index + 1, con, len); // 다음 core 탐색
+				if (con + core.size() - n - 1 >= maxCon)
+					dfs(n + 1, len, con);
+			} else {
+				if (con + core.size() - n >= maxCon)
+					dfs(n + 1, len, con + 1);
+				while (curX != cur[0] || curY != cur[1]) { // 다음 방향 탐색 전 원래대로
+					map[curX][curY] = 0;
+					len--;
+					curX -= dx[d];
+					curY -= dy[d];
+				}
 			}
-
 		}
-
 	}
-}
+} // 클래스 종료
