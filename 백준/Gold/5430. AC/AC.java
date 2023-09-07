@@ -13,11 +13,10 @@ public class Main {
 			String p = br.readLine(); // 수행할 함수(최대 10만)
 			int n = Integer.parseInt(br.readLine()); // 배열에 들어있는 수의 개수(최대 10만)
 			int[] arr = new int[n];
-			StringTokenizer st = new StringTokenizer(br.readLine(), ",");
-			for (int i = 0; i < n; i++) {
-				String x = st.nextToken().replace("[", "").replace("]", "");
-				arr[i] = Integer.parseInt(x);
-			}
+			String str = br.readLine().replace("[", "").replace("]", "");
+			StringTokenizer st = new StringTokenizer(str, ",");
+			for (int i = 0; i < n; i++)
+				arr[i] = Integer.parseInt(st.nextToken());
 
 			boolean status = true; // true: 정방향, false: 역방향
 			int lt = 0; // 왼쪽 끝
