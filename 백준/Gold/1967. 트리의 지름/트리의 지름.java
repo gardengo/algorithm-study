@@ -23,8 +23,7 @@ public class Main {
 		}
 
 		answer = 0;
-		for (int i = 1; i <= n; i++)
-			dfs(i);
+		dfs(1);
 		System.out.println(answer);
 	}
 
