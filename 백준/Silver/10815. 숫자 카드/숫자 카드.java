@@ -23,17 +23,7 @@ public class Main {
 
 		Arrays.sort(nArr);
 		for (int i = 0; i < M; i++) {
-			int lt = 0;
-			int rt = N-1;
-			while (lt < rt) {
-				int mid = (lt + rt) / 2;
-				if (nArr[mid] < mArr[i]) {
-					lt = mid + 1;
-				} else {
-					rt = mid;
-				}
-			}
-			if (nArr[rt] == mArr[i])
+			if (Arrays.binarySearch(nArr, mArr[i]) >= 0)
 				sb.append(1).append(" ");
 			else
 				sb.append(0).append(" ");
