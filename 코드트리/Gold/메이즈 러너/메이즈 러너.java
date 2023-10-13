@@ -35,7 +35,7 @@ public class Main {
 		exitX = Integer.parseInt(st.nextToken());
 		exitY = Integer.parseInt(st.nextToken());
 		maze[exitX][exitY] = -1;
-
+		
 		moving = 0;
 		for (int i = 0; i < K; i++) {
 			// 움직인다
