@@ -1,21 +1,14 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 class Solution {
-	static Node[] nodes;
-
-	static class Node {
-		int parent, left, right;
-
-		Node() {
-			parent = 1;
-			left = 0;
-			right = 0;
-		}
-	}
+	static int anc;
+	static int[] par, size;
+	static Stack<Integer> stack1, stack2;
+	static ArrayList<ArrayList<Integer>> graph;
 
 	public static void main(String args[]) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,68 +19,65 @@ class Solution {
 		for (int test_case = 1; test_case <= T; test_case++) {
 			sb.append("#").append(test_case).append(" ");
 			st = new StringTokenizer(br.readLine());
-			int V = Integer.parseInt(st.nextToken());
-			int E = Integer.parseInt(st.nextToken());
-			int first = Integer.parseInt(st.nextToken());
-			int second = Integer.parseInt(st.nextToken());
+			int V = Integer.parseInt(st.nextToken()); // 정점의 개수
+			int E = Integer.parseInt(st.nextToken()); // 간선의 개수
+			int v1 = Integer.parseInt(st.nextToken()); // 정점1
+			int v2 = Integer.parseInt(st.nextToken()); // 정점2
 
-			nodes = new Node[V + 1];
-			for (int i = 1; i <= V; i++)
-				nodes[i] = new Node();
+			anc = 0; // 공통 조상
+			par = new int[V + 1]; // 부모
+			size = new int[V + 1]; // 서브트리 크기
+			stack1 = new Stack<Integer>(); // 부모를 담은 스택
+			stack2 = new Stack<Integer>();
+			graph = new ArrayList<ArrayList<Integer>>(); // 자식을 담은 그래프
+			for (int i = 0; i <= V; i++)
+				graph.add(new ArrayList<Integer>());
 
-			st = new StringTokenizer(br.readLine()); // 간선의 정보
+			// 간선의 정보를 입력받아 부모와 자식을 채운다
+			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < E; i++) {
-				int parent = Integer.parseInt(st.nextToken());
-				int child = Integer.parseInt(st.nextToken());
-				if (nodes[parent].left == 0) {
-					nodes[parent].left = child;
-				} else {
-					nodes[parent].right = child;
-				}
-				nodes[child].parent = parent;
+				int e1 = Integer.parseInt(st.nextToken());
+				int e2 = Integer.parseInt(st.nextToken());
+				par[e2] = e1;
+				graph.get(e1).add(e2);
 			}
 
-			int parent = findParent(first, second);
-			int size = subTreeSize(parent);
-			sb.append(parent).append(" ").append(size);
+			// 정점1, 정점2의 부모들을 스택에 담는다
+			int cur = v1;
+			while (cur != 0) {
+				stack1.push(cur);
+				cur = par[cur];
+			}
+			cur = v2;
+			while (cur != 0) {
+				stack2.push(cur);
+				cur = par[cur];
+			}
+
+			// 부모 스택에서 하나씩 빼며 마지막 공통 조상을 찾는다
+			while (true) {
+				int par1 = stack1.pop();
+				int par2 = stack2.pop();
+				if (par1 == par2) {
+					anc = par1;
+				} else {
+					break;
+				}
+			}
+
+			dfs(1);
+
+			sb.append(anc).append(" ").append(size[anc]);
 			sb.append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	static int findParent(int first, int second) {
-		Queue<Integer> que = new ArrayDeque<Integer>();
-		que.offer(first);
-		while (true) {
-			first = nodes[first].parent;
-			que.offer(first);
-			if (first == 1) {
-				break;
-			}
+	public static void dfs(int v) {
+		size[v] = 1;
+		for (int i = 0; i < graph.get(v).size(); i++) {
+			dfs(graph.get(v).get(i));
+			size[v] += size[graph.get(v).get(i)];
 		}
-
-		while (true) {
-			if (que.contains(second)) {
-				return second;
-			}
-			second = nodes[second].parent;
-		}
-	}
-
-	static int subTreeSize(int parent) {
-		int size = 0;
-		Queue<Integer> que = new ArrayDeque<Integer>();
-		que.offer(parent);
-		while (!que.isEmpty()) {
-			int cur = que.poll();
-			size++;
-			if (nodes[cur].left != 0) {
-				que.offer(nodes[cur].left);
-			}
-			if (nodes[cur].right != 0) {
-				que.offer(nodes[cur].right);
-			}
-		}
-		return size;
 	}
 }
