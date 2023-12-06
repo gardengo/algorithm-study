@@ -1,6 +1,6 @@
 # [Unrated] 수열 편집 - 13501 
 
-[문제 링크](https://swexpertacademy.com/main/code/codeBattle/problemDetail.do?contestProbId=AX5MBiQqAbQDFASv&categoryId=AYnnOdjq4TwDFARi&categoryType=BATTLE&battleMainPageIndex=1) 
+[문제 링크](https://swexpertacademy.com/main/code/codeBattle/problemDetail.do?contestProbId=AX5MBiQqAbQDFASv&categoryId=AYnnOdjq4TwDFARi&categoryType=BATTLE&battleMainPageIndex=1)
 
 ### 성능 요약
 
