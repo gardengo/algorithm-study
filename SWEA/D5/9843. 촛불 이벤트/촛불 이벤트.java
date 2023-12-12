@@ -13,27 +13,14 @@ class Solution {
 		for (int test_case = 1; test_case <= T; test_case++) {
 			sb.append("#").append(test_case).append(" ");
 			long N = Long.parseLong(br.readLine());
-			long lt = 1; // k의 왼쪽 끝
-			long rt = 2000000000; // k의 오른쪽 끝
-			long res = 0; // 최고의 k
+			int k = (int) Math.sqrt(N * 2);
+			long need = (long) k * (k + 1) / 2;
+			
+			if (N == need)
+				sb.append(k);
+			else
+				sb.append(-1);
 
-			while (lt < rt) { // upper bound
-				long mid = (lt + rt) / 2;
-				long need = mid * (mid + 1) / 2; // 필요한 양초
-
-				if (need <= N) { // 삼각형을 만들 수 있으면
-					res = mid;
-					lt = mid + 1;
-				} else { // 삼각형을 만들 수 없으면
-					rt = mid;
-				}
-			}
-
-			long need = res * (res + 1) / 2;
-			if (N != need)
-				res = -1;
-
-			sb.append(res);
 			sb.append("\n");
 		}
 		System.out.print(sb);
