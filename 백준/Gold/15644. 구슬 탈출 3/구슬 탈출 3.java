@@ -1,11 +1,9 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     static char[][] board;
+    static boolean[][][][] visited;
     static int[] dx = {0, 0, -1, 1};
     static int[] dy = {-1, 1, 0, 0};
 
@@ -16,6 +14,7 @@ public class Main {
         int M = Integer.parseInt(st.nextToken());
 
         board = new char[N][M];
+        visited = new boolean[N][M][N][M];
         int[] posR = new int[2];
         int[] posB = new int[2];
 
@@ -52,6 +51,10 @@ public class Main {
                 printAnswer(cur);
                 return;
             }
+            if (visited[cur[0]][cur[1]][cur[2]][cur[3]]) {
+                continue;
+            }
+            visited[cur[0]][cur[1]][cur[2]][cur[3]] = true;
 
             for (int d = 0; d < 4; d++) {
                 if (cur.length > 4) {
@@ -67,6 +70,7 @@ public class Main {
 
         System.out.println(-1);
     }
+
 
     private static int[] move(int[] cur, int dir) {
         int[] nextR, nextB;
