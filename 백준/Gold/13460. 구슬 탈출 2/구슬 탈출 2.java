@@ -3,6 +3,7 @@ import java.util.*;
 
 public class Main {
     static char[][] board;
+    static boolean[][][][] visited;
     static int[] dx = {0, 0, -1, 1};
     static int[] dy = {-1, 1, 0, 0};
 
@@ -13,6 +14,7 @@ public class Main {
         int M = Integer.parseInt(st.nextToken());
 
         board = new char[N][M];
+        visited = new boolean[N][M][N][M];
         int[] posR = new int[2];
         int[] posB = new int[2];
 
@@ -35,24 +37,29 @@ public class Main {
 
         // bfs
         Queue<int[]> que = new ArrayDeque<>();
-        que.add(new int[]{posR[0], posR[1], posB[0], posB[1]});
+        que.add(new int[]{posR[0], posR[1], posB[0], posB[1], 0});
 
         while (!que.isEmpty()) {
             int[] cur = que.poll();
-            if (cur.length > 14) {
+
+            if (cur[4] > 10) {
                 break;
             }
             if (board[cur[2]][cur[3]] == 'O') {
                 continue;
             }
             if (board[cur[0]][cur[1]] == 'O') {
-                printAnswer(cur);
+                System.out.println(cur[4]);
                 return;
             }
+            if (visited[cur[0]][cur[1]][cur[2]][cur[3]]) {
+                continue;
+            }
+            visited[cur[0]][cur[1]][cur[2]][cur[3]] = true;
 
             for (int d = 0; d < 4; d++) {
-                if (cur.length > 4) {
-                    int bdr = cur[cur.length - 1];
+                if (cur.length == 6) {
+                    int bdr = cur[5];
                     if (bdr / 2 == d / 2)
                         continue;
                 }
@@ -88,9 +95,8 @@ public class Main {
         result[1] = nextR[1];
         result[2] = nextB[0];
         result[3] = nextB[1];
-        for (int i = 4; i < cur.length; i++)
-            result[i] = cur[i];
-        result[result.length - 1] = dir;
+        result[4] = cur[4] + 1;
+        result[5] = dir;
         return result;
     }
 
@@ -104,23 +110,5 @@ public class Main {
             y += dy[dir];
         }
         return new int[]{x, y};
-    }
-
-    private static void printAnswer(int[] cur) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(cur.length - 4).append("\n");
-//        for (int i = 4; i < cur.length; i++) {
-//            if (cur[i] == 0) {
-//                sb.append('L');
-//            } else if (cur[i] == 1) {
-//                sb.append('R');
-//            } else if (cur[i] == 2) {
-//                sb.append('U');
-//            } else {
-//                sb.append('D');
-//            }
-//        }
-
-        System.out.println(sb);
     }
 }
