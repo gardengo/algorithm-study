@@ -88,10 +88,8 @@ public class Main {
             cam1(x, y, d, idx, inst);
         } else if (num == 2) {
             cam2(x, y, d, idx, inst);
-        } else if (num == 3) {
-            cam3(x, y, d, idx, inst);
         } else {
-            cam4(x, y, d, idx, inst);
+            cam34(num, x, y, d, idx, inst);
         }
     }
 
@@ -137,31 +135,8 @@ public class Main {
         }
     }
 
-    private static void cam3(int x, int y, int d, int idx, boolean inst) {
-        for (int i = d; i < d + 2; i++) {
-            int nx = x;
-            int ny = y;
-            while (nx + dx[i % 4] >= 0 && nx + dx[i % 4] < N && ny + dy[i % 4] >= 0 && ny + dy[i % 4] < M) {
-                if (map[nx + dx[i % 4]][ny + dy[i % 4]] != 6) {
-                    if (inst && map[nx + dx[i % 4]][ny + dy[i % 4]] == 0) {
-                        map[nx + dx[i % 4]][ny + dy[i % 4]] = idx + 7;
-                        blind--;
-                    }
-                    if (!inst && map[nx + dx[i % 4]][ny + dy[i % 4]] == idx + 7) {
-                        map[nx + dx[i % 4]][ny + dy[i % 4]] = 0;
-                        blind++;
-                    }
-                    nx += dx[i % 4];
-                    ny += dy[i % 4];
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-
-    private static void cam4(int x, int y, int d, int idx, boolean inst) {
-        for (int i = d; i < d + 3; i++) {
+    private static void cam34(int num, int x, int y, int d, int idx, boolean inst) {
+        for (int i = d; i < d + num - 1; i++) {
             int nx = x;
             int ny = y;
             while (nx + dx[i % 4] >= 0 && nx + dx[i % 4] < N && ny + dy[i % 4] >= 0 && ny + dy[i % 4] < M) {
