@@ -1,38 +1,34 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        HashMap<Integer, Integer> map = new HashMap<>();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            int x = Integer.parseInt(st.nextToken());
+            if (map.containsKey(x)) {
+                map.put(x, map.get(x) + 1);
+            } else {
+                map.put(x, 1);
+            }
+        }
 
-		int N = Integer.parseInt(br.readLine());
-		HashMap<Integer, Integer> card = new HashMap<Integer, Integer>();
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			int num = Integer.parseInt(st.nextToken());
-			if (card.containsKey(num)) {
-				int value = card.get(num);
-				card.replace(num, value + 1);
-			} else {
-				card.put(num, 1);
-			}
-		}
+        StringBuilder sb = new StringBuilder();
+        int M = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            int x = Integer.parseInt(st.nextToken());
+            if (map.containsKey(x)) {
+                sb.append(map.get(x)).append(" ");
+            } else {
+                sb.append("0 ");
+            }
+        }
 
-		int M = Integer.parseInt(br.readLine());
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < M; i++) {
-			int num = Integer.parseInt(st.nextToken());
-			if (card.containsKey(num)) {
-				sb.append(card.get(num)).append(" ");
-			} else {
-				sb.append(0).append(" ");
-			}
-		}
-		System.out.println(sb);
-	}
-
+        System.out.println(sb);
+    }
 }
