@@ -40,13 +40,17 @@ public class Main {
             int x = cur[0];
             int y = cur[1];
 
+            boolean switchON = false;
             for (int[] next : graph[x][y]) {
                 if (!map[next[0]][next[1]]) {
                     map[next[0]][next[1]] = true;
                     answer++;
-                    que.clear();
-                    que.addAll(visitList);
+                    switchON = true;
                 }
+            }
+            if(switchON) {
+                que.clear();
+                que.addAll(visitList);
             }
 
             for (int d = 0; d < 4; d++) {
