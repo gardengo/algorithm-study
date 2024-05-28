@@ -2,118 +2,120 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, M;
-    static int[][] map;
-    static int[][] val;
-    static int[][] check;
-    static int[] dx = {1, -1, 0, 0};
-    static int[] dy = {0, 0, 1, -1};
 
-    public static void main(String[] args) throws Exception {
+    public static StringBuilder sb = new StringBuilder();
+    public static int N, M, cluster;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
+    public static int[][] map, count, clusterMap;
+    public static boolean[] visitCluster;
+    public static boolean[][] visitMap;
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
+        cluster = 2;
+
         map = new int[N][M];
-        for (int i = 0; i < N; i++) {
+        count = new int[N][M];
+        clusterMap = new int[N][M];
+        visitMap = new boolean[N][M];
+
+        for (int r = 0; r < N; r++) {
             String str = br.readLine();
-            for (int j = 0; j < M; j++)
-                map[i][j] = str.charAt(j) - '0';
-        }
-
-        createValue();
-        System.out.println(makeAnswer());
-    }
-
-    private static void createValue() {
-        val = new int[N][M];
-        check = new int[N][M];
-        int num = 1;
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (map[i][j] == 0 && val[i][j] == 0) {
-                    calcValue(i, j, num);
-                    num++;
-                }
+            for (int c = 0; c < M; c++) {
+                map[r][c] = str.charAt(c) - '0';
             }
         }
+
+        calculateCounts();
+        calculateResult();
+        printResult();
     }
 
-    private static void calcValue(int i, int j, int num) {
-        Set<Integer> set = new HashSet<>();
-        Queue<Integer> que = new ArrayDeque<>();
-        que.offer(i * 10000 + j);
+    private static void printResult() {
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < M; c++) {
+                sb.append(map[r][c] % 10);
+            }
+            sb.append("\n");
+        }
+        System.out.println(sb);
+    }
 
-        while (!que.isEmpty()) {
-            int cur = que.poll();
-
-            if (set.contains(cur))
-                continue;
-            set.add(cur);
-
-            int cx = cur / 10000;
-            int cy = cur % 10000;
-
-            for (int d = 0; d < 4; d++) {
-                int nx = cx + dx[d];
-                int ny = cy + dy[d];
-
-                if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-                    continue;
-
-                if (map[nx][ny] == 0) {
-                    int next = nx * 10000 + ny;
-                    if (!set.contains(next)) {
-                        que.offer(next);
+    private static void calculateResult() {
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < M; c++) {
+                if (map[r][c] == 1) {
+                    Set<Integer> set = new HashSet<>();
+                    for (int i = 0; i < dr.length; i++) {
+                        int nr = r + dr[i];
+                        int nc = c + dc[i];
+                        if (checkIndex(nr, nc) && !set.contains(clusterMap[nr][nc])) {
+                            set.add(clusterMap[nr][nc]);
+                            map[r][c] += count[nr][nc];
+                        }
                     }
                 }
             }
         }
-
-        int value = set.size();
-        for (int pos : set) {
-            int x = pos / 10000;
-            int y = pos % 10000;
-            val[x][y] = value;
-            check[x][y] = num;
-        }
     }
 
-    private static String makeAnswer() {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (map[i][j] != 0) {
-                    sb.append(calcAnswer(i, j));
-                } else {
-                    sb.append(0);
+    private static void calculateCounts() {
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < M; c++) {
+                if (map[r][c] == 0 && !visitMap[r][c]) {
+                    bfs(r, c);
                 }
             }
-            sb.append("\n");
         }
-
-        return sb.toString();
     }
 
-    private static int calcAnswer(int i, int j) {
-        int result = 1;
-        Set<Integer> set = new HashSet<>();
+    private static boolean checkIndex(int r, int c) {
+        return r >= 0 && r < N && c >= 0 && c < M;
+    }
 
-        for (int d = 0; d < 4; d++) {
-            int nx = i + dx[d];
-            int ny = j + dy[d];
+    private static void bfs(int r, int c) {
+        Queue<Pos> queue = new LinkedList<>();
+        List<Pos> list = new ArrayList<>();
+        int cnt = 1;
 
-            if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-                continue;
-            if (set.contains(check[nx][ny]))
-                continue;
+        visitMap[r][c] = true;
+        Pos startPos = new Pos(r, c);
+        queue.add(startPos);
+        list.add(startPos);
 
-            result += val[nx][ny];
-            set.add(check[nx][ny]);
+        while (!queue.isEmpty()) {
+            Pos tmp = queue.poll();
+
+            for (int i = 0; i < dr.length; i++) {
+                int nr = tmp.r + dr[i];
+                int nc = tmp.c + dc[i];
+                if (checkIndex(nr, nc) && map[nr][nc] == 0 && !visitMap[nr][nc]) {
+                    cnt++;
+                    visitMap[nr][nc] = true;
+                    Pos next = new Pos(nr, nc);
+                    queue.add(next);
+                    list.add(next);
+                }
+            }
         }
 
-        return result % 10;
+        for (Pos pos : list) {
+            count[pos.r][pos.c] = cnt;
+            clusterMap[pos.r][pos.c] = cluster;
+        }
+        cluster++;
+    }
+
+    private static class Pos {
+        int r, c;
+
+        public Pos(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
     }
 }
