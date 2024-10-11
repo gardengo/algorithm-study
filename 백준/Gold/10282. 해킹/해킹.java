@@ -41,8 +41,11 @@ public class Main {
                 time = cur[1];
 
                 ArrayList<int[]> list = map.get(cur[0]);
-                for (int[] arr : list)
+                for (int[] arr : list) {
+                    if (visited[arr[0]])
+                        continue;
                     pq.offer(new int[]{arr[0], arr[1] + cur[1]});
+                }
             }
 
             sb.append(cnt).append(" ").append(time).append("\n");
